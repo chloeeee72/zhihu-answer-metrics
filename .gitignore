@@ -1,5 +1,8 @@
 node_modules/
 store-package.zip
+# Raw page captures are large and only serve as input to make-screenshot.ps1; the composed
+# 1280x800 listing image is committed instead.
+extension/store/screenshots/
 .DS_Store
 Thumbs.db
 *.log
