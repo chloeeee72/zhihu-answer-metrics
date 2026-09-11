@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>单文件自测页 — 知乎回答字数统计</title>
+<style>
+    body { margin: 0; padding: 24px; font: 14px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; color: #121212; background: #f6f6f6; }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .lead { color: #646464; margin: 0 0 20px; }
+    .note { background: #e8f2fd; border-left: 3px solid #056de8; padding: 10px 14px; border-radius: 4px; margin: 0 0 20px; color: #333; }
+    .AnswerItem { background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .AuthorInfo { font-weight: 600; color: #175199; margin-bottom: 8px; }
+    .RichContent-inner { color: #121212; }
+    .RichContent-inner p { margin: 0 0 10px; }
+    code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>单文件自测页</h1>
+    <p class="lead">本页直接 <code>&lt;script src="../content.js"&gt;</code>，无需安装扩展即可看到统计条渲染结果。</p>
+    <p class="note">用途：快速确认脚本本身是否正常。真实扩展行为（content script 注入时机）请用 <code>demo.html</code> 配扩展验证，步骤见 <code>README-审核验证.md</code>。本页打开时若已安装扩展，不会重复插入统计条（脚本内有防重复判断）。</p>
+    <div id="list"></div>
+</div>
+<script>
+    const samples = [
+        { author: "纯中文回答", html: "<p>这是一段用于演示的中文正文。扩展会统计汉字的数量，并按每分钟三百字估算阅读时间。字数越多，估算的分钟数越大。</p>" },
+        { author: "中英混排回答", html: "<p>Mixed content sample: the extension counts Chinese characters, English words and digits separately. Version 4.3 keeps the original userscript logic unchanged.</p>" },
+        { author: "长文本回答", html: "<p>" + "知乎回答常见的长段落示例。".repeat(40) + "</p>" },
+        { author: "空正文回答（应跳过）", html: "<p>   </p>" }
+    ];
+    document.getElementById("list").innerHTML = samples.map(s => `
+        <div class="AnswerItem">
+            <div class="AuthorInfo">${s.author}</div>
+            <div class="RichContent-inner">${s.html}</div>
+        </div>
+    `).join("");
+</script>
+<script src="../content.js"></script>
+</body>
+</html>

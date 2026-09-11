@@ -1,0 +1,26 @@
+{
+  "name": "zhihu-answer-metrics",
+  "version": "4.3.0",
+  "private": true,
+  "description": "Word count and reading time for every answer on a Zhihu question page.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build-userscript.mjs",
+    "check": "node tools/build-userscript.mjs --check && node extension/tools/run-logic-check.js",
+    "test": "node extension/tools/run-logic-check.js",
+    "pack": "node tools/pack.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/chloeeee72/zhihu-answer-metrics.git"
+  },
+  "keywords": [
+    "zhihu",
+    "userscript",
+    "browser-extension",
+    "manifest-v3",
+    "word-count",
+    "reading-time"
+  ]
+}

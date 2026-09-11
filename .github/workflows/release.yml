@@ -1,0 +1,55 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verify extension logic parity
+        run: node extension/tools/run-logic-check.js
+
+      - name: Verify generated userscript is up to date
+        run: node tools/build-userscript.mjs --check
+
+      - name: Pack extension for the stores
+        run: node tools/pack.mjs
+
+      - name: Read version from the manifest
+        id: meta
+        run: |
+          node -e "const m=require('./extension/manifest.json');console.log('version='+m.version)" >> "$GITHUB_OUTPUT"
+
+      - name: Name the artifacts
+        run: |
+          cp store-package.zip "zhihu-answer-metrics-${{ steps.meta.outputs.version }}.zip"
+          cp userscript/zhihu-answer-metrics.user.js "zhihu-answer-metrics-${{ steps.meta.outputs.version }}.user.js"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zhihu-answer-metrics-${{ steps.meta.outputs.version }}
+          path: |
+            zhihu-answer-metrics-*.zip
+            zhihu-answer-metrics-*.user.js
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            zhihu-answer-metrics-*.zip
+            zhihu-answer-metrics-*.user.js
+          generate_release_notes: true

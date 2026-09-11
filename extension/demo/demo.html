@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>知乎回答字数统计 | 阅读时间估算 — 演示</title>
+<style>
+    body { margin: 0; padding: 24px; font: 14px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; color: #121212; background: #f6f6f6; }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .lead { color: #646464; margin: 0 0 20px; }
+    .note { background: #e8f2fd; border-left: 3px solid #056de8; padding: 10px 14px; border-radius: 4px; margin: 0 0 20px; color: #333; }
+    .AnswerItem { background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .AuthorInfo { font-weight: 600; color: #175199; margin-bottom: 8px; }
+    .RichContent-inner { color: #121212; }
+    .RichContent-inner p { margin: 0 0 10px; }
+    code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>知乎回答字数统计 | 阅读时间估算 — 功能演示</h1>
+    <p class="lead">本地静态页面，无需登录、不访问知乎，不发起任何网络请求。复刻知乎问题页的 <code>.AnswerItem</code> / <code>.RichContent-inner</code> 结构。</p>
+    <p class="note">
+        扩展的 content script 只匹配 <code>https://www.zhihu.com/question/*</code>，因此本页默认不会被注入。三种验证方式任选：
+        <br>① 打开同目录 <code>verify.html</code>，它直接加载脚本，最省事；
+        <br>② 在 <code>edge://extensions</code> 里为扩展开启「允许访问文件 URL」，再打开本页；
+        <br>③ 直接用真实知乎问题页验证，步骤见 <code>README-审核验证.md</code>。
+    </p>
+    <div id="list"></div>
+</div>
+<script>
+    const samples = [
+        {
+            author: "示例回答 A（纯中文）",
+            html: "<p>这是一段用于演示的中文正文。扩展会统计汉字的数量，并按每分钟三百字估算阅读时间。字数越多，估算的分钟数越大。注意统计条只做只读展示，不拦截任何点击。</p>"
+        },
+        {
+            author: "示例回答 B（中英混排 + 数字）",
+            html: "<p>Mixed content sample: the extension counts Chinese characters, English words and digits separately. Version 4.3 keeps the original userscript logic unchanged. 预计阅读时间按中英文分别折算后向上取整。</p>"
+        },
+        {
+            author: "示例回答 C（长文本）",
+            html: "<p>" + "知乎回答常见的长段落示例。".repeat(40) + "</p>"
+        },
+        {
+            author: "示例回答 D（空内容，应被跳过）",
+            html: "<p>   </p>"
+        }
+    ];
+
+    document.getElementById("list").innerHTML = samples.map(s => `
+        <div class="AnswerItem">
+            <div class="AuthorInfo">${s.author}</div>
+            <div class="RichContent-inner">${s.html}</div>
+        </div>
+    `).join("");
+</script>
+</body>
+</html>

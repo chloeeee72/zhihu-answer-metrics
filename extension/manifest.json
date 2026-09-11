@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "知乎回答字数统计 | 阅读时间估算",
+  "version": "4.3.0",
+  "description": "在知乎问题页为每条回答显示字数统计与预计阅读时间，支持“查看全部回答”等动态加载内容。",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.zhihu.com/question/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "minimum_chrome_version": "88"
+}
