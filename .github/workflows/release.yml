@@ -28,6 +28,10 @@ jobs:
       - name: Pack extension for the stores
         run: node tools/pack.mjs
 
+      - name: Verify generated files are up to date
+        run: |
+          node tools/pack.mjs --check
+
       - name: Read version from the manifest
         id: meta
         run: |

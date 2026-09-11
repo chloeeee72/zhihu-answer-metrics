@@ -86,9 +86,16 @@ pwsh -File ../tools/pack.ps1      # 等价实现，仅需 PowerShell 7
 ## 上架前仍需人工补齐
 
 - **支持邮箱 / 支持网页**：在 Partner Center 的 Properties 页填写，仓库里无法代填。
+  建议填 `https://github.com/chloeeee72/zhihu-answer-metrics/issues`。
 - **商店截图**：至少 1 张，1280×800 或 640×400。用真实知乎问题页截图，需能看清统计条。
-- **隐私政策 URL**：把 `demo/privacy.html` 托管到可公开访问的地址（GitHub Pages 即可，
-  例如 `https://chloeeee72.github.io/zhihu-answer-metrics/privacy.html`），填入 Privacy 页。
+- **隐私政策 URL**：规范文件是 `../docs/privacy.html`，经 GitHub Pages 发布后填：
+
+  ```
+  https://chloeeee72.github.io/zhihu-answer-metrics/privacy.html
+  ```
+
+  Pages 的 Source 要设为 `main` 分支的 `/docs` 目录。本目录下的 `demo/privacy.html`
+  只是由 `../tools/pack.mjs` 生成的重定向壳，不要编辑它。
   若隐私政策选「本扩展不收集任何数据」，也可只做声明不填 URL。
 - **开发者身份验证**：Partner Center 账号需完成邮箱/身份验证，审核通过后才可提交。
 

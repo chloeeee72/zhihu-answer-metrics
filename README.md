@@ -81,6 +81,10 @@ https://raw.githubusercontent.com/chloeeee72/zhihu-answer-metrics/main/userscrip
 ├── tools/
 │   ├── build-userscript.mjs         content.js -> UserScript
 │   └── pack.mjs                     打包 store-package.zip
+├── docs/                            GitHub Pages 站点
+│   ├── index.html                   索引页
+│   ├── privacy.html                 隐私政策规范版（商店 Privacy 页用）
+│   └── 仓库与发布清单.md              发布操作手册
 └── .github/workflows/release.yml   打 tag 自动发包
 ```
 
@@ -92,7 +96,8 @@ https://raw.githubusercontent.com/chloeeee72/zhihu-answer-metrics/main/userscrip
 node tools/build-userscript.mjs            # 生成 UserScript
 node tools/build-userscript.mjs --check    # 校验生成物是否最新（CI 用）
 node extension/tools/run-logic-check.js    # DOM 桩逻辑比对，扩展 vs 原 UserScript
-node tools/pack.mjs                        # 打包 store-package.zip
+node tools/pack.mjs                        # 打包，并刷新 demo/privacy.html 重定向壳
+node tools/pack.mjs --check                # 校验上面那个壳没有过期（CI 用）
 ```
 
 图标重新生成（Windows + PowerShell 7）：

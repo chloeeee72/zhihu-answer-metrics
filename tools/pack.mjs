@@ -9,7 +9,7 @@
  * Usage: node tools/pack.mjs
  */
 
-import { readFileSync, writeFileSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, statSync, existsSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { deflateRawSync } from 'node:zlib';
@@ -121,6 +121,52 @@ function buildZip(entries) {
 }
 
 // --- pack ---------------------------------------------------------------------
+// The store-facing privacy policy lives once, in docs/privacy.html, so GitHub Pages can
+// serve it directly. extension/demo/privacy.html is a generated redirect shim. Refresh it
+// here (and in --check) so the two can never drift.
+const canonicalPrivacy = join(repoRoot, 'docs', 'privacy.html');
+const shimPath = join(extDir, 'demo', 'privacy.html');
+const PAGES_URL = 'https://chloeeee72.github.io/zhihu-answer-metrics/privacy.html';
+
+if (!existsSync(canonicalPrivacy)) {
+    throw new Error('missing docs/privacy.html - it is the canonical privacy policy');
+}
+
+const privacyShim = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>隐私政策已迁移 — 知乎回答字数统计 | 阅读时间估算</title>
+<link rel="canonical" href="${PAGES_URL}">
+<meta http-equiv="refresh" content="0; url=${PAGES_URL}">
+<style>
+    body { font: 15px/1.7 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; padding: 48px 20px; color: #222; }
+    a { color: #056de8; }
+    code { background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<p>隐私政策的规范版已迁移到：<br>
+<a href="${PAGES_URL}">${PAGES_URL}</a></p>
+<p>仓库内的规范文件是 <code>docs/privacy.html</code>。本文件只是给指向旧路径的链接留的重定向，
+由 <code>tools/pack.mjs</code> 自动生成，请勿手改。</p>
+</body>
+</html>
+`;
+
+if (process.argv.includes('--check')) {
+    if (!existsSync(shimPath) || readFileSync(shimPath, 'utf8') !== privacyShim) {
+        console.error('FAIL: extension/demo/privacy.html is not the current redirect shim.');
+        console.error('Run: node tools/pack.mjs');
+        process.exit(1);
+    }
+    console.log('OK: privacy redirect shim is in sync with docs/privacy.html');
+    process.exit(0);
+}
+
+writeFileSync(shimPath, privacyShim, 'utf8');
+console.log(`refreshed ${shimPath} (redirect -> ${PAGES_URL})`);
+
 const entries = FILES.map((name) => {
     const full = join(extDir, name);
     return { name, data: readFileSync(full), size: statSync(full).size };
